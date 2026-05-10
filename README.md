@@ -1,49 +1,64 @@
-# Homebrew Tap — Axeng
+# homebrew-axeng — Official Homebrew Tap for Axeng
 
-Install [Axeng](https://github.com/ruimachado-orbit/axeng) via Homebrew in one command:
+## Install
 
 ```bash
-brew tap ruimachado-orbit/axeng
-brew install axeng
+brew install ruimachado-orbit/axeng/axeng
 ```
 
 ## What is Axeng?
 
-**Engineering Manager Accelerator** — an open-source autonomous AI chief of staff that runs on your Mac Mini ($200 hardware). Monitors GitHub, Linear, calendar, and team activity — generates standups, 1:1 pre-reads, sprint reports, risk alerts, team sync, and offboarding automatically.
+**Engineering Manager Accelerator** — open-source autonomous AI chief of staff that runs 24/7 on any machine (even a $200 Mac Mini). Monitors GitHub, Linear, calendar, and team — generates standups, 1:1 pre-reads, sprint reports, risk alerts, team sync, and offboarding automatically.
 
-See [axeng/README.md](https://github.com/ruimachado-orbit/axeng) for full feature list.
+See full README: [github.com/ruimachado-orbit/axeng](https://github.com/ruimachado-orbit/axeng)
 
-## Quick Start
+---
+
+## Quick Setup (3 steps)
 
 ```bash
 # 1. Install
-brew tap ruimachado-orbit/axeng
-brew install axeng
+brew install ruimachado-orbit/axeng/axeng
 
-# 2. Configure — edit the config files
-vim $(brew --prefix)/opt/axeng/config/config.yaml
-cp $(brew --prefix)/opt/axeng/.env.example .env  # then add your API keys
+# 2. Configure
+AXENG_DIR=$(brew --prefix)/opt/axeng
+cp "$AXENG_DIR/.env.example" "$AXENG_DIR/.env"
+# Edit .env — add ANTHROPIC_API_KEY, LINEAR_API_KEY, GITHUB_TOKEN
+
+cp "$AXENG_DIR/config/config.yaml.example" "$AXENG_DIR/config/config.yaml"
+# Edit config/config.yaml — add your orgs, team, Linear projects
 
 # 3. Start
 axeng
-
-# 4. Open browser → http://localhost:8501
+open http://localhost:8501
 ```
 
 ## Commands
 
-| Command | Description |
+| Command | What it does |
 |---------|-------------|
 | `axeng` | Start Axeng (docker compose up -d) |
 | `axeng-stop` | Stop Axeng |
 | `axeng-logs` | View live logs |
-| `axeng-update` | Pull latest + rebuild |
+| `axeng-update` | Pull latest + rebuild + restart |
 
-## Requirements
+## Required API Keys
 
-- **macOS or Linux** with Homebrew installed
-- **Docker** (installed automatically as a dependency)
-- API keys: `LINEAR_API_KEY`, `GITHUB_TOKEN`, `ANTHROPIC_API_KEY` (or `OPENAI_API_KEY`)
+Edit `.env` (from `brew --prefix`):
+```bash
+# LLM (Claude recommended)
+ANTHROPIC_API_KEY=sk-ant-...
+
+# GitHub — token OR run `gh auth login`
+GITHUB_TOKEN=ghp_...
+
+# Linear
+LINEAR_API_KEY=lin_...
+
+# Optional
+TELEGRAM_BOT_TOKEN=...   # for daily briefings
+NEWS_API_KEY=...         # world news in briefs
+```
 
 ## Uninstall
 
