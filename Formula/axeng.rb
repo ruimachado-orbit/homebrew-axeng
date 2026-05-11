@@ -3,66 +3,136 @@
 class Axeng < Formula
   desc "Engineering Manager Accelerator — AI chief of staff for GitHub, Linear, calendar, and team"
   homepage "https://github.com/ruimachado-orbit/axeng"
-  license "MIT"
-  url "https://github.com/ruimachado-orbit/axeng.git"
-  version "1.0.0"
-
+  license "GPL-3.0"
+  url "https://github.com/ruimachado-orbit/axeng.git", branch: "main"
+  version "2.0.0"
   head "https://github.com/ruimachado-orbit/axeng.git", branch: "main"
 
-  depends_on "docker"
+  depends_on "node"
+  depends_on "python@3.12"
+  depends_on "gh"
 
   def install
-    # bin/ scripts are part of the cloned repo (installed to Cellar by homebrew via git clone)
-    bin.install Dir["bin/*"] if (prefix/"bin").exist?
+    # Install the entire repo to libexec
+    libexec.install Dir["*"]
 
-    # Create config dir and copy template if not already present
-    config_dir = prefix/"config"
-    config_dir.mkpath
-    example = config_dir/"config.yaml.example"
-    if example.exist? && !(config_dir/"config.yaml").exist?
-      cp example, config_dir/"config.yaml"
+    # Install Python dependencies
+    system "pip3", "install", "-r", libexec/"requirements.txt", "--target=#{libexec}/lib/python"
+
+    # Install Node.js dependencies for UI
+    cd libexec/"ui/nextjs" do
+      system "npm", "install"
+    end
+
+    # Create wrapper scripts
+    (bin/"axeng").write <<~EOS
+      #!/bin/bash
+      export AXENG_HOME="#{var}/axeng"
+      export PYTHONPATH="#{libexec}/src:#{libexec}/lib/python:$PYTHONPATH"
+      export PATH="#{libexec}/ui/nextjs/node_modules/.bin:$PATH"
+
+      # Ensure config directory exists
+      mkdir -p "$AXENG_HOME"
+
+      # If no arguments, show help
+      if [ $# -eq 0 ]; then
+        exec python3 "#{libexec}/bin/axeng-cli" --help
+      fi
+
+      # Run CLI with all arguments
+      exec python3 "#{libexec}/bin/axeng-cli" "$@"
+    EOS
+
+    # Create axeng-dev wrapper (starts Next.js UI)
+    (bin/"axeng-dev").write <<~EOS
+      #!/bin/bash
+      cd "#{libexec}/ui/nextjs"
+      export AXENG_HOME="#{var}/axeng"
+      export PYTHONPATH="#{libexec}/src:#{libexec}/lib/python"
+
+      echo "🚀 Starting Axeng Next.js UI..."
+
+      # Start API backend in background
+      python3 api_server.py > /tmp/axeng-api.log 2>&1 &
+      API_PID=$!
+
+      # Start Next.js
+      npm run dev
+
+      # Kill API on exit
+      kill $API_PID 2>/dev/null || true
+    EOS
+
+    chmod 0755, bin/"axeng"
+    chmod 0755, bin/"axeng-dev"
+
+    # Create var directory for user config
+    (var/"axeng").mkpath
+
+    # Copy example configs if they don't exist
+    unless (var/"axeng/.env").exist?
+      cp libexec/".env.example", var/"axeng/.env.example"
+    end
+
+    unless (var/"axeng/config.yaml").exist?
+      cp libexec/"config/config.yaml.example", var/"axeng/config.yaml.example"
     end
   end
 
   def post_install
-    ohai "🎉 Axeng installed!"
+    ohai "🎉 Axeng v2.0 installed with Next.js UI!"
     puts ""
-    puts "Next steps:"
+    puts "What's new:"
+    puts "  ✨ Next.js UI (replaces Streamlit)"
+    puts "  ⚡ 10x faster, no Docker needed"
+    puts "  🎨 Modern design with dark mode"
     puts ""
-    puts "  1. Configure:"
-    puts "     cp #{prefix}/.env.example #{prefix}/.env"
-    puts "     # Then edit #{prefix}/.env with your API keys:"
-    puts "     #   LINEAR_API_KEY, GITHUB_TOKEN, ANTHROPIC_API_KEY (or OPENAI_API_KEY)"
+    puts "Setup:"
+    puts "  1. Configure interactively:"
+    puts "     axeng configure"
     puts ""
-    puts "     # Also edit: #{prefix}/config/config.yaml"
-    puts "     #   (your GitHub orgs, Linear project IDs, team)"
+    puts "  2. Or manually edit:"
+    puts "     #{var}/axeng/.env"
+    puts "     #{var}/axeng/config.yaml"
     puts ""
-    puts "  2. Start:"
-    puts "     axeng"
+    puts "Start:"
+    puts "  axeng start        # Production mode"
+    puts "  axeng-dev          # Development mode"
     puts ""
-    puts "  3. Open: http://localhost:8501"
+    puts "  Open: http://localhost:3000"
     puts ""
-    puts "Commands:"
-    puts "  axeng        Start"
-    puts "  axeng-stop   Stop"
-    puts "  axeng-logs   View logs"
-    puts "  axeng-update Pull latest + rebuild"
-  end
-
-  test do
-    system "docker", "compose", "version"
+    puts "Other commands:"
+    puts "  axeng chat         # Chat interface"
+    puts "  axeng stop         # Stop services"
+    puts "  axeng status       # Check status"
+    puts "  axeng --help       # All commands"
   end
 
   def caveats
     <<~CAVEATS
-      Axeng requires Docker and API keys to run.
+      Axeng v2.0 uses Next.js UI (no Docker required).
 
-      Required keys in .env:
-        LINEAR_API_KEY   — linear.app/settings/api
-        GITHUB_TOKEN     — github.com/settings/tokens
-        ANTHROPIC_API_KEY — anthropic.com/api (or OPENAI_API_KEY)
+      Required API keys in #{var}/axeng/.env:
+        LINEAR_API_KEY      — linear.app/settings/api
+        GITHUB_TOKEN        — github.com/settings/tokens
+        ANTHROPIC_API_KEY   — console.anthropic.com (or other LLM provider)
+
+      Configure interactively:
+        axeng configure
+
+      Or edit manually:
+        #{var}/axeng/.env
+        #{var}/axeng/config.yaml
+
+      Start the UI:
+        axeng start         → http://localhost:3000 (production)
+        axeng-dev           → http://localhost:3000 (development)
 
       More info: https://github.com/ruimachado-orbit/axeng
     CAVEATS
+  end
+
+  test do
+    assert_match "axeng", shell_output("#{bin}/axeng --help")
   end
 end
