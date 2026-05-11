@@ -16,8 +16,13 @@ class Axeng < Formula
     # Install the entire repo to libexec
     libexec.install Dir["*"]
 
-    # Install Python dependencies
-    system "pip3", "install", "-r", libexec/"requirements.txt", "--target=#{libexec}/lib/python"
+    # Create a Python virtual environment
+    venv = libexec/"venv"
+    system Formula["python@3.12"].opt_bin/"python3.12", "-m", "venv", venv
+
+    # Install Python dependencies in the virtualenv
+    system venv/"bin/pip", "install", "--upgrade", "pip"
+    system venv/"bin/pip", "install", "-r", libexec/"requirements.txt"
 
     # Install Node.js dependencies for UI
     cd libexec/"ui/nextjs" do
@@ -28,7 +33,7 @@ class Axeng < Formula
     (bin/"axeng").write <<~EOS
       #!/bin/bash
       export AXENG_HOME="#{var}/axeng"
-      export PYTHONPATH="#{libexec}/src:#{libexec}/lib/python:$PYTHONPATH"
+      export PYTHONPATH="#{libexec}/src:$PYTHONPATH"
       export PATH="#{libexec}/ui/nextjs/node_modules/.bin:$PATH"
 
       # Ensure config directory exists
@@ -36,11 +41,11 @@ class Axeng < Formula
 
       # If no arguments, show help
       if [ $# -eq 0 ]; then
-        exec python3 "#{libexec}/bin/axeng-cli" --help
+        exec "#{venv}/bin/python3" "#{libexec}/bin/axeng-cli" --help
       fi
 
       # Run CLI with all arguments
-      exec python3 "#{libexec}/bin/axeng-cli" "$@"
+      exec "#{venv}/bin/python3" "#{libexec}/bin/axeng-cli" "$@"
     EOS
 
     # Create axeng-dev wrapper (starts Next.js UI)
@@ -48,12 +53,12 @@ class Axeng < Formula
       #!/bin/bash
       cd "#{libexec}/ui/nextjs"
       export AXENG_HOME="#{var}/axeng"
-      export PYTHONPATH="#{libexec}/src:#{libexec}/lib/python"
+      export PYTHONPATH="#{libexec}/src:$PYTHONPATH"
 
       echo "🚀 Starting Axeng Next.js UI..."
 
       # Start API backend in background
-      python3 api_server.py > /tmp/axeng-api.log 2>&1 &
+      "#{venv}/bin/python3" api_server.py > /tmp/axeng-api.log 2>&1 &
       API_PID=$!
 
       # Start Next.js
