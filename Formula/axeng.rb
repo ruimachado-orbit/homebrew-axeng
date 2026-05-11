@@ -4,8 +4,8 @@ class Axeng < Formula
   desc "Engineering Manager Accelerator — AI chief of staff for GitHub, Linear, calendar, and team"
   homepage "https://github.com/ruimachado-orbit/axeng"
   license "GPL-3.0"
-  url "https://github.com/ruimachado-orbit/axeng.git", tag: "v2.1.1"
-  version "2.1.1"
+  url "https://github.com/ruimachado-orbit/axeng.git", tag: "v2.2.0"
+  version "2.2.0"
   head "https://github.com/ruimachado-orbit/axeng.git", branch: "main"
 
   depends_on "node"
@@ -85,53 +85,55 @@ class Axeng < Formula
   end
 
   def post_install
-    ohai "🎉 Axeng v2.1.1 - Engineering Manager Command Center!"
+    ohai "🎉 Axeng v2.2.0 - Complete EM Platform!"
     puts ""
-    puts "🆕 What's new in v2.1.1:"
-    puts "  🔍 Real-time progress indicators"
-    puts "  📊 PR health analysis (axeng pr-health)"
-    puts "  💡 Smart query suggestions in chat"
-    puts "  📈 Linear project health analytics"
-    puts "  🐛 Bug fixes (JSON import, PR timeout)"
+    puts "🆕 What's new in v2.2.0 - Strategic Features:"
+    puts "  🎯 Sprint health & velocity tracking"
+    puts "  📈 DORA metrics dashboard"
+    puts "  📊 Automated weekly reports"
+    puts "  ⏱️  Additional 10-15 hours saved per week!"
     puts ""
     puts "Quick start:"
-    puts "  axeng configure    # Interactive wizard (2 min)"
-    puts "  axeng chat         # Chat with smart suggestions"
-    puts "  axeng pr-health    # Check PR pipeline"
-    puts "  axeng --help       # See all commands"
+    puts "  axeng configure    # Interactive wizard"
+    puts "  axeng sprint       # Sprint health"
+    puts "  axeng dora         # DORA metrics"
+    puts "  axeng report --weekly  # Weekly summary"
     puts ""
     puts "Daily operations:"
-    puts "  axeng ooo          # Who's out today"
-    puts "  axeng issues       # My Linear issues"
-    puts "  axeng prs          # My GitHub PRs"
     puts "  axeng standup      # Daily standup brief"
+    puts "  axeng ooo          # Who's out today"
+    puts "  axeng pr-health    # PR pipeline health"
     puts ""
-    puts "EM workflows:"
-    puts "  axeng prep [name]  # 1:1 meeting prep"
-    puts "  axeng team         # Team management"
-    puts "  axeng offboard [user] --dry-run  # Safe offboarding"
+    puts "Metrics & analytics:"
+    puts "  axeng sprint --velocity    # Historical velocity"
+    puts "  axeng dora --days 60       # DORA metrics"
+    puts "  axeng report --weekly --send   # Send report"
     puts ""
-    puts "Time savings: 30-45 minutes per day!"
+    puts "Total time savings: 8+ hours per week!"
     puts ""
     puts "Configuration: #{var}/axeng/.env"
-    puts "Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.1.1"
+    puts "Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.2.0"
   end
 
   def caveats
     <<~CAVEATS
-      Axeng v2.1.1 - Engineering Manager Command Center
+      Axeng v2.2.0 - Complete EM Platform
 
-      🆕 New in v2.1.1:
-        🔍 Real-time progress indicators
-        📊 PR health analysis (axeng pr-health)
-        💡 Smart query suggestions
-        📈 Project health analytics
+      🆕 Strategic features in v2.2.0:
+        🎯 Sprint health & velocity tracking
+        📈 DORA metrics (4 key metrics)
+        📊 Automated weekly reports
+        ⏱️  Saves 8+ hours per week!
 
-      Quick start:
-        axeng configure    # Interactive wizard
-        axeng chat         # Chat with smart suggestions
-        axeng pr-health    # Check PR pipeline
-        axeng ooo          # Who's OOO today
+      Try the new commands:
+        axeng sprint       # Sprint health analysis
+        axeng dora         # DORA metrics dashboard
+        axeng report --weekly  # Weekly summary
+
+      Daily operations:
+        axeng standup      # Daily standup
+        axeng pr-health    # PR pipeline health
+        axeng ooo          # Who's OOO
 
       All commands:
         axeng --help       # See full list
@@ -145,7 +147,7 @@ class Axeng < Formula
         GITHUB_TOKEN        — github.com/settings/tokens
         LLM provider key    — OpenCode/Anthropic/OpenAI
 
-      Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.1.1
+      Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.2.0
     CAVEATS
   end
 
