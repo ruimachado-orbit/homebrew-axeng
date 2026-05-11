@@ -4,8 +4,8 @@ class Axeng < Formula
   desc "Engineering Manager Accelerator — AI chief of staff for GitHub, Linear, calendar, and team"
   homepage "https://github.com/ruimachado-orbit/axeng"
   license "GPL-3.0"
-  url "https://github.com/ruimachado-orbit/axeng.git", tag: "v2.1.0"
-  version "2.1.0"
+  url "https://github.com/ruimachado-orbit/axeng.git", tag: "v2.1.1"
+  version "2.1.1"
   head "https://github.com/ruimachado-orbit/axeng.git", branch: "main"
 
   depends_on "node"
@@ -85,18 +85,20 @@ class Axeng < Formula
   end
 
   def post_install
-    ohai "🎉 Axeng v2.1.0 - Engineering Manager Command Center!"
+    ohai "🎉 Axeng v2.1.1 - Engineering Manager Command Center!"
     puts ""
-    puts "🆕 What's new in v2.1.0:"
-    puts "  ✨ 10 new EM workflow commands"
-    puts "  ⏱️  Saves 30-45 minutes per day"
-    puts "  🎨 Interactive CLI experience"
-    puts "  🔒 Chat history persistence"
+    puts "🆕 What's new in v2.1.1:"
+    puts "  🔍 Real-time progress indicators"
+    puts "  📊 PR health analysis (axeng pr-health)"
+    puts "  💡 Smart query suggestions in chat"
+    puts "  📈 Linear project health analytics"
+    puts "  🐛 Bug fixes (JSON import, PR timeout)"
     puts ""
     puts "Quick start:"
     puts "  axeng configure    # Interactive wizard (2 min)"
-    puts "  axeng chat         # Chat with AI assistant"
-    puts "  axeng --help       # See all 14 commands"
+    puts "  axeng chat         # Chat with smart suggestions"
+    puts "  axeng pr-health    # Check PR pipeline"
+    puts "  axeng --help       # See all commands"
     puts ""
     puts "Daily operations:"
     puts "  axeng ooo          # Who's out today"
@@ -112,22 +114,26 @@ class Axeng < Formula
     puts "Time savings: 30-45 minutes per day!"
     puts ""
     puts "Configuration: #{var}/axeng/.env"
-    puts "Full docs: https://github.com/ruimachado-orbit/axeng"
+    puts "Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.1.1"
   end
 
   def caveats
     <<~CAVEATS
-      Axeng v2.1.0 - Engineering Manager Command Center
+      Axeng v2.1.1 - Engineering Manager Command Center
 
-      🆕 10 new commands save you 30-45 minutes per day!
+      🆕 New in v2.1.1:
+        🔍 Real-time progress indicators
+        📊 PR health analysis (axeng pr-health)
+        💡 Smart query suggestions
+        📈 Project health analytics
 
       Quick start:
         axeng configure    # Interactive wizard
+        axeng chat         # Chat with smart suggestions
+        axeng pr-health    # Check PR pipeline
         axeng ooo          # Who's OOO today
-        axeng standup      # Daily standup brief
-        axeng prep [name]  # 1:1 meeting prep
 
-      All 14 commands:
+      All commands:
         axeng --help       # See full list
 
       Configuration:
@@ -139,7 +145,7 @@ class Axeng < Formula
         GITHUB_TOKEN        — github.com/settings/tokens
         LLM provider key    — OpenCode/Anthropic/OpenAI
 
-      Docs: https://github.com/ruimachado-orbit/axeng
+      Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.1.1
     CAVEATS
   end
 
