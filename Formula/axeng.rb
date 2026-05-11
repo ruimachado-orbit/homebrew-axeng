@@ -4,8 +4,8 @@ class Axeng < Formula
   desc "Engineering Manager Accelerator — AI chief of staff for GitHub, Linear, calendar, and team"
   homepage "https://github.com/ruimachado-orbit/axeng"
   license "GPL-3.0"
-  url "https://github.com/ruimachado-orbit/axeng.git", tag: "v2.2.0"
-  version "2.2.0"
+  url "https://github.com/ruimachado-orbit/axeng.git", tag: "v2.2.1"
+  version "2.2.1"
   head "https://github.com/ruimachado-orbit/axeng.git", branch: "main"
 
   depends_on "node"
@@ -85,9 +85,13 @@ class Axeng < Formula
   end
 
   def post_install
-    ohai "🎉 Axeng v2.2.0 - Complete EM Platform!"
+    ohai "🎉 Axeng v2.2.1 - Complete EM Platform!"
     puts ""
-    puts "🆕 What's new in v2.2.0 - Strategic Features:"
+    puts "🆕 What's new in v2.2.1 - Auto-Discovery:"
+    puts "  ✨ DORA metrics work out of the box (no config needed!)"
+    puts "  🔍 Auto-discovers GitHub repos using gh CLI"
+    puts ""
+    puts "Strategic features from v2.2.0:"
     puts "  🎯 Sprint health & velocity tracking"
     puts "  📈 DORA metrics dashboard"
     puts "  📊 Automated weekly reports"
@@ -112,14 +116,18 @@ class Axeng < Formula
     puts "Total time savings: 8+ hours per week!"
     puts ""
     puts "Configuration: #{var}/axeng/.env"
-    puts "Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.2.0"
+    puts "Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.2.1"
   end
 
   def caveats
     <<~CAVEATS
-      Axeng v2.2.0 - Complete EM Platform
+      Axeng v2.2.1 - Complete EM Platform
 
-      🆕 Strategic features in v2.2.0:
+      🆕 Fixed in v2.2.1:
+        ✨ DORA metrics work out of the box
+        🔍 Auto-discovers repos (no config needed!)
+
+      Strategic features in v2.2.0:
         🎯 Sprint health & velocity tracking
         📈 DORA metrics (4 key metrics)
         📊 Automated weekly reports
@@ -147,7 +155,7 @@ class Axeng < Formula
         GITHUB_TOKEN        — github.com/settings/tokens
         LLM provider key    — OpenCode/Anthropic/OpenAI
 
-      Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.2.0
+      Release notes: https://github.com/ruimachado-orbit/axeng/releases/tag/v2.2.1
     CAVEATS
   end
 
